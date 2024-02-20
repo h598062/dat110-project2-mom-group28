@@ -76,13 +76,13 @@ public class Storage {
 	}
 
 	public void addSubscriber(String user, String topic) {
-		if (subscriptions.get(topic) == null) {
-			subscriptions.put(topic, Set.of(user));
-
-		} else if (!subscriptions.get(topic).isEmpty()) {
-			Set<String> subscribers = subscriptions.get(topic);
+		Set<String> subscribers = subscriptions.get(topic);
+		if (subscribers == null) {
+			subscribers = ConcurrentHashMap.newKeySet();
 			subscribers.add(user);
 			subscriptions.put(topic, subscribers);
+		} else {
+			subscribers.add(user);
 		}
 	}
 

@@ -53,33 +53,33 @@ public class Dispatcher extends Stopable {
 		// invoke the appropriate handler method
 		switch (type) {
 
-		case DISCONNECT:
-			onDisconnect((DisconnectMsg) msg);
-			break;
+			case DISCONNECT:
+				onDisconnect((DisconnectMsg) msg);
+				break;
 
-		case CREATETOPIC:
-			onCreateTopic((CreateTopicMsg) msg);
-			break;
+			case CREATETOPIC:
+				onCreateTopic((CreateTopicMsg) msg);
+				break;
 
-		case DELETETOPIC:
-			onDeleteTopic((DeleteTopicMsg) msg);
-			break;
+			case DELETETOPIC:
+				onDeleteTopic((DeleteTopicMsg) msg);
+				break;
 
-		case SUBSCRIBE:
-			onSubscribe((SubscribeMsg) msg);
-			break;
+			case SUBSCRIBE:
+				onSubscribe((SubscribeMsg) msg);
+				break;
 
-		case UNSUBSCRIBE:
-			onUnsubscribe((UnsubscribeMsg) msg);
-			break;
+			case UNSUBSCRIBE:
+				onUnsubscribe((UnsubscribeMsg) msg);
+				break;
 
-		case PUBLISH:
-			onPublish((PublishMsg) msg);
-			break;
+			case PUBLISH:
+				onPublish((PublishMsg) msg);
+				break;
 
-		default:
-			Logger.log("broker dispatch - unhandled message type");
-			break;
+			default:
+				Logger.log("broker dispatch - unhandled message type");
+				break;
 
 		}
 	}
@@ -125,7 +125,7 @@ public class Dispatcher extends Stopable {
 	}
 
 	public void onSubscribe(SubscribeMsg msg) {
-		String user = msg.getUser();
+		String user  = msg.getUser();
 		String topic = msg.getTopic();
 
 		Logger.log("onSubscribe:" + msg.toString());
@@ -134,7 +134,7 @@ public class Dispatcher extends Stopable {
 	}
 
 	public void onUnsubscribe(UnsubscribeMsg msg) {
-		String user = msg.getUser();
+		String user  = msg.getUser();
 		String topic = msg.getTopic();
 
 		Logger.log("onUnsubscribe:" + msg.toString());
@@ -142,9 +142,10 @@ public class Dispatcher extends Stopable {
 		storage.removeSubscriber(user, topic);
 	}
 
+	// Feilmelding her
 	public void onPublish(PublishMsg msg) {
+		String topic   = msg.getTopic();
 		String message = msg.getMessage();
-		String topic = msg.getTopic();
 
 		Logger.log("onPublish:" + msg.toString());
 
@@ -152,8 +153,8 @@ public class Dispatcher extends Stopable {
 		// messages must be sent using the corresponding client session objects
 		Set<String> subscribers = storage.getSubscribers(topic);
 		for (String subscriber : subscribers) {
-			ClientSession session = storage.getSession(subscriber);
-			Message publishMsg = new PublishMsg(subscriber, topic, message);
+			ClientSession session    = storage.getSession(topic);
+			Message       publishMsg = new PublishMsg(subscriber, topic, message);
 			session.send(publishMsg);
 		}
 	}
