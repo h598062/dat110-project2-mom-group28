@@ -152,14 +152,18 @@ public class Dispatcher extends Stopable {
 		// topic and message is contained in the subscribe message
 		// messages must be sent using the corresponding client session objects
 		Set<String> subscribers = storage.getSubscribers(topic);
-		for (String subscriber : subscribers) {
-			ClientSession session = storage.getSession(topic);
-			if (session != null) {
-				Message publishMsg = new PublishMsg(subscriber, topic, message);
-				session.send(publishMsg);
-			} else {
-				Logger.log("No session found for topic: " + topic);
+		if (subscribers != null) {
+			for (String subscriber : subscribers) {
+				ClientSession session = storage.getSession(subscriber);
+				if (session != null) {
+					Message publishMsg = new PublishMsg(subscriber, topic, message);
+					session.send(publishMsg);
+				} else {
+					Logger.log("No session found for user: " + subscriber);
+				}
 			}
+		} else {
+			Logger.log("No subscribers found for topic: " + topic);
 		}
 	}
 }
