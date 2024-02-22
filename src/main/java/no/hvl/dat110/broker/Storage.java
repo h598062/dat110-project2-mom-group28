@@ -62,7 +62,9 @@ public class Storage {
 
 	public void createTopic(String topic) {
 		// create topic in the storage
-		subscriptions.put(topic, ConcurrentHashMap.newKeySet());
+		if (!subscriptions.contains(topic)) {
+			subscriptions.put(topic, ConcurrentHashMap.newKeySet());
+		}
 	}
 
 	public void deleteTopic(String topic) {

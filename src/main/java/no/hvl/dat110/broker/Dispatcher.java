@@ -148,8 +148,9 @@ public class Dispatcher extends Stopable {
 		// publish the message to clients subscribed to the topic
 		// topic and message is contained in the subscribe message
 		// messages must be sent using the corresponding client session objects
-		Set<String> subscriber = storage.getSubscribers(msg.getTopic());
-		for (String s : subscriber) {
+		Set<String> subscribers = storage.getSubscribers(msg.getTopic());
+		if (subscribers == null) return;
+		for (String s : subscribers) {
 			storage.clients.get(s).send(msg);
 		}
 	}
