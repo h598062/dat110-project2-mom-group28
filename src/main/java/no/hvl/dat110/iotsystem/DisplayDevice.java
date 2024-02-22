@@ -13,8 +13,7 @@ public class DisplayDevice {
 		
 		System.out.println("Display starting ...");
 		
-		// TODO - START
-				
+
 		// create a client object and use it to
 		
 		// - connect to the broker - use "display" as the username
@@ -23,12 +22,24 @@ public class DisplayDevice {
 		// - receive messages on the topic
 		// - unsubscribe from the topic
 		// - disconnect from the broker
-		
-		// TODO - END
-		
+
+		Client client = new Client("display", Common.BROKERHOST, Common.BROKERPORT);
+		client.connect();
+		client.createTopic(Common.TEMPTOPIC);
+		client.subscribe(Common.TEMPTOPIC);
+		for (int i = 0; i < COUNT; i++) {
+			Message receive = client.receive();
+			System.out.println(receive);
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		client.unsubscribe(Common.TEMPTOPIC);
+		client.disconnect();
+
 		System.out.println("Display stopping ... ");
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
+
 	}
 }
