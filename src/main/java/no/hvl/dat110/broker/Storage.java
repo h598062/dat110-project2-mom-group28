@@ -72,7 +72,7 @@ public class Storage {
 	public void createTopic(String topic) {
 
 		// create topic in the storage
-
+		if (subscriptions.contains(topic)) return;
 		subscriptions.put(topic, ConcurrentHashMap.newKeySet());
 
 	}
